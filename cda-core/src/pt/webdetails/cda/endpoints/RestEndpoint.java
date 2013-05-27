@@ -10,7 +10,6 @@ import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
 import java.io.IOException;
 import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,6 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 
 import pt.webdetails.cda.CdaCoreService;
 import pt.webdetails.cda.ResponseTypeHandler;
@@ -307,15 +305,16 @@ public class RestEndpoint {
   }
   
   //XXX could use this getRelativePath instead of the one in CoreService?
-  private String getRelativePath(String solution, String path, String file) throws UnsupportedEncodingException
-  {
-    if (StringUtils.isEmpty(solution))
-    {
-      return path;
-    }
-
-    return StringUtils.join(new String[] {solution, path, file}, "/" ).replaceAll("//", "/");
-  }
+  //TODO: yes, we probably should have; and get it out of core service
+  //  private String getRelativePath(String solution, String path, String file) throws UnsupportedEncodingException
+  //  {
+  //    if (StringUtils.isEmpty(solution))
+  //    {
+  //      return path;
+  //    }
+  //
+  //    return StringUtils.join(new String[] {solution, path, file}, "/" ).replaceAll("//", "/");
+  //  }
   
   protected void writeOut(OutputStream out, String contents) throws IOException {
       IOUtils.write(contents, out, getEncoding());

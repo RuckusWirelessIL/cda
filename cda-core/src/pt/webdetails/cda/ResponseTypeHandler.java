@@ -4,32 +4,24 @@
 
 package pt.webdetails.cda;
 
-/**
- *
- * @author joao
- */
 import java.util.Locale;
 import javax.servlet.http.HttpServletResponse;
+
 public class ResponseTypeHandler implements IResponseTypeHandler {
 
     private HttpServletResponse response;
-    public ResponseTypeHandler(){}
-    public ResponseTypeHandler(HttpServletResponse response){this.response=response;}
-    public void setHttpServletResponse(HttpServletResponse response){this.response=response;}
+
+    public ResponseTypeHandler() {}
+
+    public ResponseTypeHandler(HttpServletResponse response) { this.response = response; }
+
+    public void setHttpServletResponse(HttpServletResponse response) { this.response = response; }
+
     @Override
-    public boolean hasResponse(){return this.response!=null;}
+    public boolean hasResponse(){ return this.response != null; }
+
     @Override
     public void setResponseHeaders(String mimeType, int cacheDuration, String attachmentName) {
-        
-        // Make sure we have the correct mime type
-        //FIXME what to do with mimes?
-      /*
-      final IMimeTypeListener mimeTypeListener = outputHandler.getMimeTypeListener();
-      if (mimeTypeListener != null)
-      {
-        mimeTypeListener.setMimeType(mimeType);
-      }
-      */
       response.setHeader("Content-Type", mimeType);
 
       if (attachmentName != null)

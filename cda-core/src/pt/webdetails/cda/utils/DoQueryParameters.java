@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -16,12 +17,15 @@ import java.util.Map;
  */
 public class DoQueryParameters {
 
+    // TODO: get some actual javadoc, auto-comments don't add anything here
+    // at least when we had no comments, we knew we had no comments
+
     private String path;
     private String solution;
     private String file;
     private String outputType;
     private int outputIndexId;
-    private String DataAccessId;
+    private String dataAccessId;
     private boolean bypassCache;
     private boolean paginateQuery;
     private int pageSize;
@@ -31,20 +35,21 @@ public class DoQueryParameters {
     private List<String> sortBy;
     private Map<String, Object> extraParams;
     private Map<String, Object> extraSettings;
-    
-    
+
+
     public DoQueryParameters(String path, String solution, String file) {
         this.path = path;
         this.solution = solution;
         this.file = file;
         this.outputType = "json";
         this.outputIndexId = 1;
-        this.DataAccessId = "<blank>";
+        this.dataAccessId = "<blank>";
         this.bypassCache = false;
         this.paginateQuery = false;
         this.pageSize = 0;
         this.pageStart = 0;
         this.wrapItUp = false;
+        // TODO: why not null/empty? is this being set <blank> at client-side?
         this.jsonCallback="<blank>";
         this.sortBy = new ArrayList<String>();
         extraParams = new HashMap<String, Object>();
@@ -70,7 +75,13 @@ public class DoQueryParameters {
      * @return the path
      */
     public String getPath() {
-        return path;
+        // legacy path support
+        if (StringUtils.isEmpty(solution))
+        {
+          return path;
+        }
+        // legacy
+        return StringUtils.join(new String[] {solution, path, file}, "/" ).replaceAll("//", "/");
     }
 
     /**
@@ -81,24 +92,10 @@ public class DoQueryParameters {
     }
 
     /**
-     * @return the solution
-     */
-    public String getSolution() {
-        return solution;
-    }
-
-    /**
      * @param solution the solution to set
      */
     public void setSolution(String solution) {
         this.solution = solution;
-    }
-
-    /**
-     * @return the file
-     */
-    public String getFile() {
-        return file;
     }
 
     /**
@@ -112,14 +109,11 @@ public class DoQueryParameters {
      * @return the DataAccessId
      */
     public String getDataAccessId() {
-        return DataAccessId;
+        return dataAccessId;
     }
 
-    /**
-     * @param DataAccessId the DataAccessId to set
-     */
-    public void setDataAccessId(String DataAccessId) {
-        this.DataAccessId = DataAccessId;
+    public void setDataAccessId(String dataAccessId) {
+        this.dataAccessId = dataAccessId;
     }
 
     /**

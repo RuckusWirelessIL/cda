@@ -28,6 +28,7 @@ import pt.webdetails.cpf.http.PentahoParameterProvider;
 
 public class CdaContentGenerator extends SimpleContentGenerator
 {
+
   public static final String PLUGIN_NAME = "cda";
 
   private static final long serialVersionUID = 1L;
@@ -177,8 +178,6 @@ public class CdaContentGenerator extends SimpleContentGenerator
   public void syncronize(final IParameterProvider pathParams, final OutputStream out) throws Exception
   {
     throw new UnsupportedOperationException("Feature not implemented yet");
-//    final SyncronizeCdfStructure syncCdfStructure = new SyncronizeCdfStructure();
-//    syncCdfStructure.syncronize(userSession, out, pathParams);
   }
 
 
