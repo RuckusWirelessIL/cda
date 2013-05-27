@@ -4,48 +4,43 @@
 
 package pt.webdetails.cda.endpoints;
 
-
-import java.io.OutputStream;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.Iterator;
+import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
 import static javax.ws.rs.core.MediaType.APPLICATION_JSON;
 import static javax.ws.rs.core.MediaType.APPLICATION_XML;
 
-import static javax.ws.rs.core.MediaType.APPLICATION_FORM_URLENCODED;
-
-
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.UnsupportedEncodingException;
+import java.util.Iterator;
 import java.util.List;
-
 import java.util.Map;
-import java.util.Map.Entry;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Context;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 
 import pt.webdetails.cda.CdaCoreService;
+import pt.webdetails.cda.ResponseTypeHandler;
 import pt.webdetails.cda.utils.DoQueryParameters;
 import pt.webdetails.cpf.http.CommonParameterProvider;
 import pt.webdetails.cpf.http.ICommonParameterProvider;
-import pt.webdetails.cda.ResponseTypeHandler;
 
 @Path("/cda/api/utils")
 public class RestEndpoint {
   //private static final Log logger = LogFactory.getLog(CdaUtils.class);
   //private static final SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-  
+
   public static final String PLUGIN_NAME = "cda";
-  private static final long serialVersionUID = 1L;
+  //  private static final long serialVersionUID = 1L;
   //private static final String EDITOR_SOURCE = "/editor/editor.html";
   //private static final String EXT_EDITOR_SOURCE = "/editor/editor-cde.html";
   //private static final String PREVIEWER_SOURCE = "/previewer/previewer.html";
@@ -55,10 +50,7 @@ public class RestEndpoint {
   //private static final String PREFIX_PARAMETER = "param";
   //private static final String PREFIX_SETTING = "setting";
   public static final String ENCODING = "UTF-8";
-  
-  
- 
-  
+
   protected static String getEncoding() { return ENCODING; }
   
   @GET
@@ -95,9 +87,7 @@ public class RestEndpoint {
       queryParams.setJsonCallback(jsonCallback);
       CdaCoreService coreService = new CdaCoreService(new ResponseTypeHandler(servletResponse));
       coreService.doQuery(servletResponse.getOutputStream(), queryParams);
-      
-      
-      
+
   }
   
   @GET
@@ -216,13 +206,14 @@ public class RestEndpoint {
   public void cacheMonitor(@QueryParam("method") String method,
                            @Context HttpServletResponse servletResponse, 
                            @Context HttpServletRequest servletRequest) throws Exception{
-      Map parameters = servletRequest.getParameterMap();
-      ICommonParameterProvider requParam= new CommonParameterProvider();
-      Iterator it = parameters.entrySet().iterator();
+      @SuppressWarnings("unchecked")
+      Map<String, Object> parameters = servletRequest.getParameterMap();
+      ICommonParameterProvider requParam = new CommonParameterProvider();
+      Iterator<Map.Entry<String, Object>> it = parameters.entrySet().iterator();
       while(it.hasNext())
       {
-          Map.Entry e = (Map.Entry)it.next();
-          requParam.put((String)e.getKey(), e.getValue());
+          Map.Entry<String, Object> e = it.next();
+          requParam.put(e.getKey(), e.getValue());
       }
       CdaCoreService coreService = new CdaCoreService();
       coreService.cacheMonitor(servletResponse.getOutputStream(), method, requParam);
@@ -250,7 +241,7 @@ public class RestEndpoint {
                            @Context HttpServletRequest servletRequest) throws Exception
   {
       CdaCoreService coreService = new CdaCoreService();
-       coreService.previewQuery(servletResponse.getOutputStream(),new ResponseTypeHandler(servletResponse));
+      coreService.previewQuery(servletResponse.getOutputStream(),new ResponseTypeHandler(servletResponse));
   }
 
   @GET
@@ -271,7 +262,6 @@ public class RestEndpoint {
   @Produces("text/javascript")
   @Consumes({ APPLICATION_XML, APPLICATION_JSON })
   public void getJsResource(@QueryParam("resource") String resource,
-          
                             @Context HttpServletResponse servletResponse, 
                             @Context HttpServletRequest servletRequest) throws Exception
   {
@@ -284,7 +274,6 @@ public class RestEndpoint {
   @Produces("application/json")
   @Consumes({ APPLICATION_XML, APPLICATION_JSON })
   public void listDataAccessTypes(@DefaultValue("false") @QueryParam("refreshCache") Boolean refreshCache,
-          
                                   @Context HttpServletResponse servletResponse, 
                                   @Context HttpServletRequest servletRequest) throws Exception
   {
@@ -299,7 +288,6 @@ public class RestEndpoint {
   public void cacheController(@QueryParam("method") String method,
                               @QueryParam("object") String object,
                               @QueryParam("id") String id,
-  
                               @Context HttpServletResponse servletResponse, 
                               @Context HttpServletRequest servletRequest) throws IOException
   {

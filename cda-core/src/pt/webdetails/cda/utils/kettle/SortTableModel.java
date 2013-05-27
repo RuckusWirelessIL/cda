@@ -152,13 +152,11 @@ public class SortTableModel implements RowProductionManager
     }
     catch (InterruptedException e)
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.error(e);
     }
     catch (ExecutionException e)
     {
-      // TODO Auto-generated catch block
-      e.printStackTrace();
+      logger.error(e);
     }
   }
 

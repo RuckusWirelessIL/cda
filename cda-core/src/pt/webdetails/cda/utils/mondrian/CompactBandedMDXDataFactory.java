@@ -10,7 +10,6 @@ import mondrian.olap.Result;
 import org.pentaho.reporting.engine.classic.core.DataRow;
 import org.pentaho.reporting.engine.classic.core.ReportDataFactoryException;
 import org.pentaho.reporting.engine.classic.extensions.datasources.mondrian.AbstractNamedMDXDataFactory;
-import org.pentaho.reporting.engine.classic.extensions.datasources.mondrian.BandedMDXTableModel;
 
 /**
  * This data-factory operates in Legacy-Mode providing a preprocessed view on the mondrian result.
@@ -22,6 +21,9 @@ import org.pentaho.reporting.engine.classic.extensions.datasources.mondrian.Band
  */
 public class CompactBandedMDXDataFactory extends AbstractNamedMDXDataFactory
 {
+
+  private static final long serialVersionUID = 1L;
+
   public CompactBandedMDXDataFactory()
   {
   }

@@ -19,37 +19,37 @@ import pt.webdetails.cpf.session.ISessionUtils;
 
 
 public interface ICdaEnvironment {
-	
-	public void init() throws InitializationException;
-	
-	public ICubeFileProviderSetter getCubeFileProviderSetter();
 
-	public IQueryCache getQueryCache();
+  public void init() throws InitializationException;
 
-	public IMondrianRoleMapper getMondrianRoleMapper();
+  public ICubeFileProviderSetter getCubeFileProviderSetter();
 
-	public byte[] getCdaConfigFile(String fileName);
+  public IQueryCache getQueryCache();
 
-	public ICdaCoreSessionFormulaContext getFormulaContext();
+  public IMondrianRoleMapper getMondrianRoleMapper();
 
-	public Properties getCdaComponents();
-	
-	public List<IRepositoryFile> getComponentsFiles();
+  public byte[] getCdaConfigFile(String fileName);
 
-	public IEventPublisher getEventPublisher();
+  public ICdaCoreSessionFormulaContext getFormulaContext();
 
-	public ISessionUtils getSessionUtils();
+  public Properties getCdaComponents();
 
-	public IRepositoryAccess getRepositoryAccess();
+  public List<IRepositoryFile> getComponentsFiles();
 
-	public IDataAccessUtils getDataAccessUtils();
+  public IEventPublisher getEventPublisher();
 
-	public IResourceKeyGetter getResourceKeyGetter();
+  public ISessionUtils getSessionUtils();
 
-	public IPluginCall createPluginCall(String plugin, String method, Map<String, Object> params);
-	
-	public boolean supportsCacheScheduler();
-	
-	public ICacheScheduleManager getCacheScheduler();
+  public IRepositoryAccess getRepositoryAccess();
+
+  public IDataAccessUtils getDataAccessUtils();
+
+  public IResourceKeyGetter getResourceKeyGetter();
+
+  public IPluginCall createPluginCall(String plugin, String method, Map<String, Object> params);
+
+  public boolean supportsCacheScheduler();
+
+  public ICacheScheduleManager getCacheScheduler();
 
 }

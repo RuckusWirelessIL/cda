@@ -129,35 +129,33 @@ public class CdaEngine
 
 
   private static ICdaEnvironment getConfiguredEnvironment() throws InitializationException {
-	    String className = CdaBoot.getInstance().getGlobalConfig().getConfigProperty("pt.webdetails.cda.environment.default");
-	    
-	    if (StringUtils.isNotBlank(className)) {
-	      try {
-	        final Class<?> clazz;
-	        clazz = Class.forName(className);
-	        if (!ICdaEnvironment.class.isAssignableFrom(clazz)) {
-	          throw new InitializationException (
-	            "Plugin class specified by property pt.webdetails.cda.beanFactoryClass "
-	            + " must implement "
-	            + ICdaBeanFactory.class.getName(), null);
-	        }
-	          return (ICdaEnvironment) clazz.newInstance();
-	        } catch (ClassNotFoundException e) {
-	          String errorMessage = "Class not found when loading bean factory " + className;
-	          logger.error(errorMessage, e);
-	          throw new InitializationException(errorMessage, e); 
-	        } catch (IllegalAccessException e) {
-	          String errorMessage = "Illegal access when loading bean factory from " + className;
-	          logger.error(errorMessage, e);
-	          throw new InitializationException(errorMessage, e); 
-	        } catch (InstantiationException e) {
-	          String errorMessage = "Instantiation error when loading bean factory from " + className;
-	          logger.error(errorMessage, e);
-	          throw new InitializationException(errorMessage, e); 
-	        }
-	      }
-	    
-	    return null;
+
+    String className = CdaBoot.getInstance().getGlobalConfig().getConfigProperty("pt.webdetails.cda.environment.default");
+
+    if (StringUtils.isBlank(className)) {
+      return new DefaultCdaEnvironment();
+    }
+
+    try {
+      final Class<?> clazz = Class.forName(className);
+      if (!ICdaEnvironment.class.isAssignableFrom(clazz)) {
+        throw new InitializationException("Plugin class specified by property pt.webdetails.cda.beanFactoryClass " + " must implement " + ICdaBeanFactory.class.getName(), null);
+      }
+      return (ICdaEnvironment) clazz.newInstance();
+    } catch (ClassNotFoundException e) {
+      String errorMessage = "Class not found when loading bean factory " + className;
+      logger.error(errorMessage, e);
+      throw new InitializationException(errorMessage, e);
+    } catch (IllegalAccessException e) {
+      String errorMessage = "Illegal access when loading bean factory from " + className;
+      logger.error(errorMessage, e);
+      throw new InitializationException(errorMessage, e);
+    } catch (InstantiationException e) {
+      String errorMessage = "Instantiation error when loading bean factory from " + className;
+      logger.error(errorMessage, e);
+      throw new InitializationException(errorMessage, e);
+    }
+
   }
 
   private ICdaEnvironment getEnv() {
@@ -176,22 +174,19 @@ public class CdaEngine
 
   public static void init(ICdaEnvironment env) throws InitializationException
   {
-	  if (!isInitialized()) {
-		  // try to get the environment from the configuration
-		  // will return the DefaultCdaEnvironment by default
-		  if (env == null)
-			  env = getConfiguredEnvironment();
+    if (!isInitialized()) {
+      // try to get the environment from the configuration
+      // will return the DefaultCdaEnvironment by default
+      if (env == null) {
+        env = getConfiguredEnvironment();
+      }
 
-		  if (env == null)
-			  env = new DefaultCdaEnvironment();
-		  
-		  _instance = new CdaEngine(env);
+      _instance = new CdaEngine(env);
 
-
-		  // Start ClassicEngineBoot
-		  CdaBoot.getInstance().start();
-		  ClassicEngineBoot.getInstance().start();
-	  }
+      // Start ClassicEngineBoot
+      CdaBoot.getInstance().start();
+      ClassicEngineBoot.getInstance().start();
+    }
 
   }
   

@@ -39,13 +39,12 @@ import pt.webdetails.cpf.session.ISessionUtils;
 import pt.webdetails.cpf.utils.Utils;
 
 
-
+// TODO: doc, what is this?
 public class CdaCoreService 
 { 
 
   private static Log logger = LogFactory.getLog(CdaCoreService.class);
   public static final String PLUGIN_NAME = "cda";
-  private static final long serialVersionUID = 1L;
   
   @Deprecated
   private static final String EDITOR_SOURCE = "/editor/editor.html";
@@ -57,8 +56,6 @@ public class CdaCoreService
   private static final String CACHE_MANAGER_PATH = "system/" + PLUGIN_NAME + "/cachemanager/cache.html";
   private static final int DEFAULT_PAGE_SIZE = 20;
   private static final int DEFAULT_START_PAGE = 0;
-  private static final String PREFIX_PARAMETER = "param";
-  private static final String PREFIX_SETTING = "setting";
   private static final String JSONP_CALLBACK = "callback";
   public static final String ENCODING = "UTF-8";
   private IResponseTypeHandler responseHandler;
@@ -109,9 +106,6 @@ public class CdaCoreService
     }
     
     final ArrayList<String> sortBy = new ArrayList<String>();
-    String[] def =
-    {
-    };
     for (Object obj : parameters.getSortBy())
     {
       if (!((String) obj).equals(""))
@@ -124,20 +118,19 @@ public class CdaCoreService
 
     // ... and the query parameters
     // We identify any pathParams starting with "param" as query parameters and extra settings prefixed with "setting"
-    @SuppressWarnings("unchecked")
-    final Iterator settings = parameters.getExtraSettings().entrySet().iterator();
+    final Iterator<Map.Entry<String, Object>> settings = parameters.getExtraSettings().entrySet().iterator();
     while (settings.hasNext())
     {
-        Map.Entry<String,Object> pairs = (Map.Entry)settings.next();
+        Map.Entry<String,Object> pairs = settings.next();
       final String name = pairs.getKey();
       final Object parameter = pairs.getValue();
       queryOptions.addSetting(name, (String)parameter);
     }
-    final Iterator params = parameters.getExtraParams().entrySet().iterator();
+    final Iterator<Map.Entry<String, Object>> params = parameters.getExtraParams().entrySet().iterator();
     while (params.hasNext())
     {
-        
-      Map.Entry<String,Object> pairs = (Map.Entry)params.next();
+
+      Map.Entry<String,Object> pairs = params.next();
       final String name = pairs.getKey();
       final Object parameter = pairs.getValue();
       queryOptions.addParameter(name, parameter);
@@ -229,7 +222,7 @@ public class CdaCoreService
     if(StringUtils.isEmpty(relativePath)){
       throw new IllegalArgumentException("No path provided");
     }
-    IRepositoryAccess repAccess = CdaEngine.getEnvironment().getRepositoryAccess();
+//    IRepositoryAccess repAccess = CdaEngine.getEnvironment().getRepositoryAccess();
     logger.debug("Do Query: getRelativePath:" + relativePath);
     final CdaSettings cdaSettings = SettingsManager.getInstance().parseSettingsFile(relativePath);
 
@@ -249,7 +242,7 @@ public class CdaCoreService
     final CdaEngine engine = CdaEngine.getInstance();
    // final ICommonParameterProvider requestParams = requParam;
     final String relativePath = getRelativePath(path,solution,file);
-    IRepositoryAccess repAccess = CdaEngine.getEnvironment().getRepositoryAccess();
+//    IRepositoryAccess repAccess = CdaEngine.getEnvironment().getRepositoryAccess();
     logger.debug("Do Query: getRelativePath:" + relativePath);
     final CdaSettings cdaSettings = SettingsManager.getInstance().parseSettingsFile(relativePath);
 

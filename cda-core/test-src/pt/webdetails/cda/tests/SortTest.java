@@ -49,19 +49,19 @@ public class SortTest extends TestCase
 
     logger.info("Doing query with 2 column sort");
     queryOptions.setDataAccessId("1");
-    queryOptions.setSortBy(new ArrayList(Arrays.asList( new String[]{"0D" , "1A"})));
+    queryOptions.setSortBy(new ArrayList<String>(Arrays.asList( new String[]{"0D" , "1A"})));
     engine.doQuery(out, cdaSettings, queryOptions);
 
     logger.info("\nDoing query with no sort");
-    queryOptions.setSortBy(new ArrayList(Arrays.asList( new String[]{})));
+    queryOptions.setSortBy(new ArrayList<String>(Arrays.asList( new String[]{})));
     engine.doQuery(out, cdaSettings, queryOptions);
 
     logger.info("\nDoing query with all combinations");
-    queryOptions.setSortBy(new ArrayList(Arrays.asList( new String[]{"0D" , "2", "1A"})));
+    queryOptions.setSortBy(new ArrayList<String>(Arrays.asList( new String[]{"0D" , "2", "1A"})));
     engine.doQuery(out, cdaSettings, queryOptions);
 
     logger.info("\nDoing query with only one sort");
-    queryOptions.setSortBy(new ArrayList(Arrays.asList( new String[]{"1A"})));
+    queryOptions.setSortBy(new ArrayList<String>(Arrays.asList( new String[]{"1A"})));
     engine.doQuery(out, cdaSettings, queryOptions);
 
   }

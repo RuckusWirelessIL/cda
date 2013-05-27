@@ -32,7 +32,6 @@ public class Util
       }
     }
 
-    e.printStackTrace();
     return out.toString();
 
   }

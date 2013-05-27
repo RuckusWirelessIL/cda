@@ -8,21 +8,13 @@ import junit.framework.TestCase;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dom4j.DocumentException;
 
 import pt.webdetails.cda.CdaBoot;
 import pt.webdetails.cda.CdaEngine;
-import pt.webdetails.cda.connections.UnsupportedConnectionException;
-import pt.webdetails.cda.dataaccess.QueryException;
-import pt.webdetails.cda.dataaccess.UnsupportedDataAccessException;
 import pt.webdetails.cda.exporter.ExporterEngine;
-import pt.webdetails.cda.exporter.ExporterException;
-import pt.webdetails.cda.exporter.UnsupportedExporterException;
 import pt.webdetails.cda.query.QueryOptions;
 import pt.webdetails.cda.settings.CdaSettings;
 import pt.webdetails.cda.settings.SettingsManager;
-import pt.webdetails.cda.settings.UnknownDataAccessException;
-
 
 /**
  * Created by IntelliJ IDEA.
@@ -95,14 +87,7 @@ public class SqlTest extends TestCase
 
     // Querying 2nd time to test cache
     logger.info("Doing query again to see if cache expires");
-    try
-    {
-      Thread.sleep(6000);
-    }
-    catch (InterruptedException e)
-    {
-      e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-    }
+    Thread.sleep(6000);
     engine.doQuery(out, cdaSettings, queryOptions);
 
   }

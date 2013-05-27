@@ -23,14 +23,19 @@ import pt.webdetails.cda.utils.MetadataTableModel;
 public class JsonExporter extends AbstractExporter
 {
 
-  boolean isJsonp = false;
+  // TODO: we'll need to tackle encodings at some point
+  private static final String ENCODING = "UTF-8";
 
+  boolean isJsonp = false;
 
   public JsonExporter()
   {
     super();
   }
 
+  public static String getEncoding() {
+    return ENCODING;
+  }
 
   public JsonExporter(HashMap<String, String> extraSettings)
   {
@@ -51,22 +56,19 @@ public class JsonExporter extends AbstractExporter
 
       try
       {
-
-        if (isJsonp)
-        {
-          out.write(this.getSetting("callback", "xxx").concat("(").getBytes("UTF-8"));
+        if (isJsonp) {
+          out.write(this.getSetting("callback", "xxx").concat("(").getBytes(ENCODING));
         }
 
-        out.write(json.toString().getBytes("UTF-8"));
+        out.write(json.toString().getBytes(ENCODING));
 
-        if (isJsonp)
-        {
-          out.write(");".getBytes("UTF-8"));
+        if (isJsonp) {
+          out.write(");".getBytes(ENCODING));
         }
       }
       catch (IOException e)
       {
-        throw new ExporterException("IO Exception converting to utf-8", e);
+        throw new ExporterException("IO Exception converting to " + ENCODING, e);
       }
 
     }

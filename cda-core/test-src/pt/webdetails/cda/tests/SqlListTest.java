@@ -2,27 +2,17 @@ package pt.webdetails.cda.tests;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.OutputStream;
 import java.net.URL;
-import java.nio.charset.Charset;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dom4j.DocumentException;
 
 import pt.webdetails.cda.CdaBoot;
 import pt.webdetails.cda.CdaEngine;
-import pt.webdetails.cda.connections.UnsupportedConnectionException;
-import pt.webdetails.cda.dataaccess.QueryException;
-import pt.webdetails.cda.dataaccess.UnsupportedDataAccessException;
 import pt.webdetails.cda.exporter.ExporterEngine;
-import pt.webdetails.cda.exporter.ExporterException;
-import pt.webdetails.cda.exporter.UnsupportedExporterException;
 import pt.webdetails.cda.query.QueryOptions;
 import pt.webdetails.cda.settings.CdaSettings;
 import pt.webdetails.cda.settings.SettingsManager;
-import pt.webdetails.cda.settings.UnknownDataAccessException;
-import junit.framework.Assert;
 import junit.framework.TestCase;
 
 public class SqlListTest extends TestCase {
@@ -50,11 +40,8 @@ public class SqlListTest extends TestCase {
 
   public void testSqlQuery() throws Exception
   {
-
-
-    // Define an outputStream
-    OutputStream out = System.out;
     ByteArrayOutputStream baos = new ByteArrayOutputStream();
+    final String enc = "UTF-8";
 
     logger.info("Building CDA settings from sample file");
 
@@ -71,9 +58,8 @@ public class SqlListTest extends TestCase {
     queryOptions.setOutputType(ExporterEngine.OutputType.XML);
 
     logger.info("Shipped,Cancelled through string");
-    engine.doQuery(out, cdaSettings, queryOptions);
     engine.doQuery(baos, cdaSettings, queryOptions);
-    String testRes = new String(baos.toByteArray(),Charset.defaultCharset());
+    String testRes = new String(baos.toByteArray(), enc);
     assertTrue(testRes.contains("Shipped"));
     assertTrue(testRes.contains("Cancelled"));
     baos = new ByteArrayOutputStream();
@@ -84,9 +70,8 @@ public class SqlListTest extends TestCase {
     queryOptions.setOutputType(ExporterEngine.OutputType.XML);
 
     logger.info("\nShipped,Cancelled through string[]");
-    engine.doQuery(out, cdaSettings, queryOptions);
     engine.doQuery(baos, cdaSettings, queryOptions);
-    testRes = new String(baos.toByteArray(),Charset.defaultCharset());
+    testRes = new String(baos.toByteArray(), enc);
     assertTrue(testRes.contains("Shipped"));
     assertTrue(testRes.contains("Cancelled"));
 

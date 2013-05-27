@@ -13,6 +13,7 @@ import pt.webdetails.cda.settings.SettingsManager;
 import pt.webdetails.cda.xml.DomTraversalHelper;
 import pt.webdetails.cda.xml.XmlUtils;
 
+// TODO: some minimal documentation as to what this is
 public class RoundtripSuite extends XMLTestCase {
 	
 	private SettingsManager settingsManager;
@@ -29,11 +30,9 @@ public class RoundtripSuite extends XMLTestCase {
 	    final CdaSettings cdaSettings = settingsManager.parseSettingsFile(settingsFile.getAbsolutePath());
 	    return cdaSettings.asXML();
 	}
-	
 
-	
 	public String generateXml(String file) throws Exception {
-		
+
 	    final File settingsFile = new File(file);
 	    final CdaSettings cdaSettings = settingsManager.parseSettingsFile(settingsFile.getAbsolutePath());
 		return XmlUtils.prettyPrint(tHelper.traverse(cdaSettings).asXML());

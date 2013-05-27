@@ -13,7 +13,6 @@ import org.pentaho.reporting.libraries.formula.FormulaContext;
 import pt.webdetails.cda.CdaEngine;
 import pt.webdetails.cda.dataaccess.InvalidParameterException;
 import pt.webdetails.cda.formula.ICdaCoreSessionFormulaContext;
-import pt.webdetails.cpf.session.ISessionUtils;
 import pt.webdetails.cpf.session.IUserSession;
 
 
@@ -25,17 +24,16 @@ public class FormulaEvaluator {
  
   public static String replaceFormula(String text) {
     
-    if(!StringUtils.contains(text, FORMULA_BEGIN)) return text;
-    try{
+    if (!StringUtils.contains(text, FORMULA_BEGIN)) {
+      return text;
+    }
+    try {
       IUserSession session = (CdaEngine.getEnvironment().getSessionUtils()).getCurrentSession();
       ICdaCoreSessionFormulaContext formulaContext = CdaEngine.getEnvironment().getFormulaContext();
       formulaContext.setSession(session);
-      
+
       return replaceFormula(text, formulaContext);
-
-
-    }
-    catch(Exception e){//TODO: change
+    } catch (Exception e) { //TODO: change
       throw new RuntimeException(e);
     }
   }

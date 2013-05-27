@@ -29,22 +29,19 @@ import pt.webdetails.cpf.http.PentahoParameterProvider;
 public class CdaContentGenerator extends SimpleContentGenerator
 {
   public static final String PLUGIN_NAME = "cda";
+
   private static final long serialVersionUID = 1L;
   private static final String PREFIX_PARAMETER = "param";
   private static final String PREFIX_SETTING = "setting";
- 
 
 
-  
-  
   @Exposed(accessLevel = AccessLevel.PUBLIC)
   @Audited(action = "doQuery")
   public void doQuery(final OutputStream out) throws Exception
   {
 
-    SolutionReposHelper.setSolutionRepositoryThreadVariable(PentahoSystem.get(ISolutionRepository.class, PentahoSessionHolder.getSession()));     
-    
-    
+    SolutionReposHelper.setSolutionRepositoryThreadVariable(PentahoSystem.get(ISolutionRepository.class, PentahoSessionHolder.getSession()));
+
     final IParameterProvider requestParams = getRequestParameters();
     DoQueryParameters parameters = new DoQueryParameters(
             (String)requestParams.getParameter("path"), 
@@ -61,6 +58,7 @@ public class CdaContentGenerator extends SimpleContentGenerator
 
     Map<String, Object> extraParams = new HashMap<String, Object>();
     Map<String, Object> extraSettings = new HashMap<String, Object>();
+    @SuppressWarnings("unchecked")
     final Iterator<String> params = (Iterator<String>) requestParams.getParameterNames();
     while (params.hasNext())
     {
@@ -81,16 +79,13 @@ public class CdaContentGenerator extends SimpleContentGenerator
     parameters.setExtraSettings(extraSettings);
     
     final ArrayList<String> sortBy = new ArrayList<String>();
-    String[] def =
-    {
-    };
-    for (Object obj : requestParams.getArrayParameter("sortBy", def))
+    for (Object obj : requestParams.getArrayParameter("sortBy", new String[0]))
     {
       if (!((String) obj).equals(""))
       {
         sortBy.add((String) obj);
       }
-    }            
+    }
     parameters.setSortBy(sortBy);
     parameters.setWrapItUp(requestParams.getStringParameter("wrapItUp", null) != null);
 
@@ -193,19 +188,17 @@ public class CdaContentGenerator extends SimpleContentGenerator
     return logger;
   }
 
-
-
-
   
   @Exposed(accessLevel = AccessLevel.PUBLIC)
   public void editFile(final OutputStream out) throws Exception
   {
     CdaCoreService coreService = new CdaCoreService(new ResponseTypeHandler(getResponse()));
-    coreService.editFile(out, (String)getRequestParameters().getParameter("path"),
-                        (String)getRequestParameters().getParameter("solution"),
-            (String)getRequestParameters().getParameter("file"),
-            new ResponseTypeHandler(getResponse())
-            );
+    coreService.editFile(
+      out,
+      (String) getRequestParameters().getParameter("path"),
+      (String) getRequestParameters().getParameter("solution"),
+      (String) getRequestParameters().getParameter("file"),
+      new ResponseTypeHandler(getResponse()));
   }
 
   @Exposed(accessLevel = AccessLevel.PUBLIC)
@@ -255,10 +248,6 @@ public class CdaContentGenerator extends SimpleContentGenerator
     CdaCoreService coreService = new CdaCoreService();
     coreService.manageCache(out,new ResponseTypeHandler(getResponse()));            
   }
-  
-  
-  
-  
 
 
   @Override

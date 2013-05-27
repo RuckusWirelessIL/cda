@@ -11,6 +11,8 @@ package pt.webdetails.cda.utils.kettle;
  * Time: 5:39:10 PM
  */
 public class SortException extends Exception {
+  private static final long serialVersionUID = 1L;
+
   public SortException(final String s, final Exception cause) {
     super(s,cause);
   }

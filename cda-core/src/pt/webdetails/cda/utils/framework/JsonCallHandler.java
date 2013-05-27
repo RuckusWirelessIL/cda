@@ -29,8 +29,8 @@ public abstract class JsonCallHandler {
   public static final int INDENT_FACTOR = 2;
   
   private HashMap<String, Method> methods = new HashMap<String, Method>();
-  private String methodParameter = "method";
-  private String defaultMethod = null;
+//  private String methodParameter = "method";
+//  private String defaultMethod = null;
   
   public static class JsonResultFields 
   {
