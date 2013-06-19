@@ -36,7 +36,7 @@ import pt.webdetails.cpf.repository.BaseRepositoryAccess.FileAccess;
 import pt.webdetails.cpf.repository.IRepositoryAccess;
 import pt.webdetails.cpf.repository.IRepositoryFile;
 import pt.webdetails.cpf.session.ISessionUtils;
-import pt.webdetails.cpf.utils.Utils;
+import pt.webdetails.cpf.utils.MimeTypes;
 
 
 // TODO: doc, what is this?
@@ -72,7 +72,7 @@ public class CdaCoreService
     final CdaEngine engine = CdaEngine.getInstance();
     final QueryOptions queryOptions = new QueryOptions();
 
-    final String path = getRelativePath(parameters.getPath() , parameters.getSolution(), parameters.getFile());
+    final String path = parameters.getPath();
     final CdaSettings cdaSettings = SettingsManager.getInstance().parseSettingsFile(path);
     
     // Handle paging options
@@ -333,8 +333,8 @@ public class CdaCoreService
     //TODO: only pentaho layer should care about this
 	String joined = "";
 	joined += (StringUtils.isEmpty(solution) ? "" : URLDecoder.decode(solution, ENCODING) + "/");
-	joined += (StringUtils.isEmpty(originalPath) ? "" : URLDecoder.decode(originalPath, ENCODING) + "/");
-	joined += (StringUtils.isEmpty(file) ? "" : URLDecoder.decode(file, ENCODING));
+	joined += (StringUtils.isEmpty(originalPath) ? "" : URLDecoder.decode(originalPath, ENCODING));
+	joined += (StringUtils.isEmpty(file) ? "" : "/" + URLDecoder.decode(file, ENCODING));
 	joined = joined.replaceAll("//", "/");
 	return joined;
   }
@@ -372,7 +372,9 @@ public class CdaCoreService
   }
 
 
-  public String getResourceAsString(final String path, FileAccess access,IResponseTypeHandler response) throws IOException, AccessDeniedException{
+  public String getResourceAsString(final String path, FileAccess access, IResponseTypeHandler response)
+      throws IOException, AccessDeniedException
+  {
     IRepositoryAccess repository = CdaEngine.getEnvironment().getRepositoryAccess();
     if (repository.hasAccess(path, access)) {
       HashMap<String, String> keys = new HashMap<String, String>();
@@ -405,7 +407,7 @@ public class CdaCoreService
       boolean hasCde = repository.resourceExists("system/pentaho-cdf-dd");
       
       final String editorPath = "system/" + PLUGIN_NAME + (hasCde? EXT_EDITOR_SOURCE : EDITOR_SOURCE);
-      writeOut(out, getResourceAsString(editorPath,FileAccess.EXECUTE,response));
+      writeOut(out, getResourceAsString(editorPath, FileAccess.EXECUTE, response));
     }
     else
     {
@@ -493,7 +495,7 @@ public class CdaCoreService
   }
 
   private String getMimeType(String attachmentName){
-    return Utils.getMimeType(attachmentName);
+      return MimeTypes.getMimeType(attachmentName);
   }
 
   private void setResponseHeaders(String mimeType, String attachmentName){

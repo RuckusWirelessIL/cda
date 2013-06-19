@@ -18,7 +18,7 @@ public class CdaPropertiesHelper {
     String value = CdaBoot.getInstance().getGlobalConfig().getConfigProperty(key);
     return StringUtils.isEmpty(value) ? defaultValue : value;
   }
-  
+
   public static boolean getBoolProperty(String key, boolean defaultValue){
     String value = getStringProperty(key, null);
     if(value != null){
@@ -29,7 +29,7 @@ public class CdaPropertiesHelper {
     }
     return defaultValue;
   }
-  
+
   public static int getIntProperty(String key, int defaultValue){
     String value = getStringProperty(key, null);
     if(value != null){

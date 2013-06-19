@@ -2,55 +2,65 @@
          xmlns:ivy="antlib:org.apache.ivy.ant">
 
   <description>
-    This build file is used to make it easier to build the different cgg targets
+    This build file is used to make it easier to build the different CDA targets
   </description>
 
+  <property name="cda.core.dir" value="cda-core"/>
+  <property name="cda.pentaho.dir" value="cda-pentaho"/>
 
-    <target name="build-core" >
-		<ant dir="cda-core" antfile="build.xml" target="dist" inheritAll="true"/>
-    </target>
+  <target name="build-core" >
+      <ant dir="${cda.core.dir}" antfile="build.xml" target="dist" inheritAll="true"/>
+  </target>
 
-    <target name="build-and-test-core" >
-		<ant dir="cda-core" antfile="build.xml" target="dist" inheritAll="true"/>
-        <ant dir="cda-core" antfile="build.xml" target="test" inheritAll="true"/>
-    </target>
+  <target name="build-and-test-core" >
+      <ant dir="${cda.core.dir}" antfile="build.xml" target="dist" inheritAll="true"/>
+      <ant dir="${cda.core.dir}" antfile="build.xml" target="test" inheritAll="true"/>
+  </target>
 
-
-    <target name="publish-local" >
-		<ant dir="cda-core"    antfile="build.xml" target="publish-local" inheritAll="true"/>
+  <target name="publish-local" >
+      <ant dir="${cda.core.dir}"    antfile="build.xml" target="publish-local" inheritAll="true"/>
+        <copy todir="cda-pentaho/dev-lib" overwrite="true">
+            <fileset dir="cda-core/dist">
+                <include name="*.jar"/>
+            </fileset>
+        </copy>		
         <ant dir="cda-pentaho" antfile="build.xml" target="publish-local" inheritAll="true"/>
     </target>
 
+  <target name="copy-core">
+      <copy todir="${cda.pentaho.dir}/dev-lib" overwrite="true">
+          <fileset dir="${cda.core.dir}/dist">
+              <include name="*.jar"/>
+          </fileset>
+      </copy>
+  </target>
 
+  <target name="full-dist" depends="build-and-test-core">
+      <copy todir="${cda.pentaho.dir}/dev-lib" overwrite="true">
+          <fileset dir="${cda.core.dir}/dist">
+              <include name="*.jar"/>
+          </fileset>
+      </copy>
+      <ant dir="${cda.pentaho.dir}" antfile="build.xml" target="dist" inheritAll="true"/>
+  </target>
 
-    <target name="full-dist" depends="build-and-test-core">
-        <copy todir="cda-pentaho/dev-lib" overwrite="true">
-            <fileset dir="cda-core/dist">
-                <include name="*.jar"/>
-            </fileset>
-        </copy>
-		<ant dir="cda-pentaho" antfile="build.xml" target="dist" inheritAll="true"/>
-    </target>
+  <target name="dist" depends="build-core,copy-core">
+      <ant dir="${cda.pentaho.dir}" antfile="build.xml" target="dist" inheritAll="true"/>
+  </target>
 
+  <target name="install-plugin" depends="build-core,copy-core">
+<!--      <copy todir="${cda.pentaho.dir}/dev-lib" overwrite="true">
+          <fileset dir="${cda.core.dir}/dist">
+              <include name="*.jar"/>
+          </fileset>
+      </copy> -->
+      <ant dir="${cda.core.dir}"    antfile="build.xml" target="publish-local" inheritAll="true"/>
+      <ant dir="${cda.pentaho.dir}" antfile="build.xml" target="install-plugin" inheritAll="true"/>
+  </target>
 
-    <target name="dist" depends="build-core">
-        <copy todir="cda-pentaho/dev-lib" overwrite="true">
-            <fileset dir="cda-core/dist">
-                <include name="*.jar"/>
-            </fileset>
-        </copy>
-		<ant dir="cda-pentaho" antfile="build.xml" target="dist" inheritAll="true"/>
-    </target>
+  <target name="clean">
+      <ant dir="${cda.core.dir}"    antfile="build.xml" target="clean" />
+      <ant dir="${cda.pentaho.dir}" antfile="build.xml" target="clean" />
+  </target>
 
-    <target name="install-plugin" depends="build-core">
-        <copy todir="cda-pentaho/dev-lib" overwrite="true">
-            <fileset dir="cda-core/dist">
-                <include name="*.jar"/>
-            </fileset>
-        </copy>    
-		<ant dir="cda-pentaho" antfile="build.xml" target="install-plugin" inheritAll="true"/>
-    </target>
-
-
-		
 </project>

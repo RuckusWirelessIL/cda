@@ -7,8 +7,6 @@ import java.util.Map;
 
 import junit.framework.Assert;
 import junit.framework.TestCase;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import pt.webdetails.cda.CdaBoot;
 import pt.webdetails.cda.CdaQueryComponent;
 /**
@@ -19,8 +17,6 @@ import pt.webdetails.cda.CdaQueryComponent;
  */
 public class CdaQueryComponentTest extends TestCase
 {
-
-  private static final Log logger = LogFactory.getLog(CdaQueryComponentTest.class);
 
   public CdaQueryComponentTest()
   {
@@ -51,11 +47,11 @@ public class CdaQueryComponentTest extends TestCase
     inputs.put("dataAccessId", "1");
     inputs.put("paramorderDate", "2003-04-01");
     component.setInputs(inputs);
-    
+
     component.validate();
     component.execute();
     Assert.assertNotNull(component.getResultSet());
-    
+
     Assert.assertEquals(4, component.getResultSet().getColumnCount());
     Assert.assertEquals(3, component.getResultSet().getRowCount());
     
