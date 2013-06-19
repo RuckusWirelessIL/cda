@@ -28,7 +28,6 @@ import pt.webdetails.cda.settings.DefaultResourceKeyGetter;
 import pt.webdetails.cda.settings.IResourceKeyGetter;
 import pt.webdetails.cpf.IPluginCall;
 import pt.webdetails.cpf.impl.DefaultRepositoryFile;
-import pt.webdetails.cpf.impl.DummyInterPluginCall;
 import pt.webdetails.cpf.impl.SimpleSessionUtils;
 import pt.webdetails.cpf.impl.SimpleUserSession;
 import pt.webdetails.cpf.messaging.IEventPublisher;
@@ -39,6 +38,7 @@ import pt.webdetails.cpf.repository.IRepositoryAccess;
 import pt.webdetails.cpf.repository.IRepositoryFile;
 import pt.webdetails.cpf.session.ISessionUtils;
 
+//TODO: what's the point in using interfaces for beans if we don't use them?
 public class DefaultCdaEnvironment implements ICdaEnvironment {
 
   protected static Log logger = LogFactory.getLog(DefaultCdaEnvironment.class);
@@ -294,19 +294,13 @@ public class DefaultCdaEnvironment implements ICdaEnvironment {
 
   @Override
   public IPluginCall createPluginCall(String plugin, String method, Map<String, Object> params) {
-    try {
-      String id = "IPluginCall";
-      if (beanFactory != null && beanFactory.containsBean(id)) {
-        IPluginCall pc = (IPluginCall) beanFactory.getBean(id);
-        pc.init(new CorePlugin(plugin), method,  params);
-        return pc;
-      }
-    } catch (Exception e) {
-      logger.error("Cannot get bean IPluginCall. Using DummyInterPluginCall", e);
+    String id = "IPluginCall";
+    if (beanFactory != null && beanFactory.containsBean(id)) {
+      IPluginCall pc = (IPluginCall) beanFactory.getBean(id);
+      pc.init(new CorePlugin(plugin), method,  params);
+      return pc;
     }
-    IPluginCall pluginCall = new DummyInterPluginCall();
-    pluginCall.init(new CorePlugin(plugin), method, params);
-    return pluginCall;
+    throw new RuntimeException("IPluginCall: no such bean");
   }
 
   @Override

@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry kind="src" output="classes" path="src"/>
-	<classpathentry kind="src" output="classes-test" path="test"/>
-	<classpathentry kind="src" path="cda-core"/>
-	<classpathentry kind="src" path="cda-pentaho"/>
-	<classpathentry kind="src" path="cda-standalone"/>
+	<classpathentry kind="src" output="cda-core/bin" path="cda-core/src"/>
+	<classpathentry kind="src" output="cda-core/bin" path="cda-core/test-src"/>
+	<classpathentry kind="src" output="cda-pentaho/bin/classes" path="cda-pentaho/src"/>
+	<classpathentry kind="src" output="cda-pentaho/bin/test/classes" path="cda-pentaho/test-src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=cda&amp;ivyXmlPath=ivy.xml&amp;confs=*&amp;ivySettingsPath=%24%7Bproject_loc%7D%2Fivysettings.xml&amp;loadSettingsOnDemand=false&amp;propertyFiles=%24%7Bproject_loc%7D%2Fbuild.properties&amp;acceptedTypes=jar&amp;alphaOrder=false&amp;resolveInWorkspace=false&amp;retrievedClasspath=false&amp;sourceTypes=source&amp;javadocTypes=javadoc&amp;sourceSuffixes=-source%2C-sources%2C-src&amp;javadocSuffixes=-javadoc%2C-javadocs%2C-doc%2C-docs&amp;mapIfOnlyOneSource=false&amp;mapIfOnlyOneJavadoc=false&amp;resolveBeforeLaunch=false&amp;useExtendedResolveId=false"/>
-	<classpathentry kind="lib" path="dev-lib/json-lib-2.3-jdk15.jar"/>
-	<classpathentry kind="lib" path="dev-lib/junit-4.8.2.jar"/>
-	<classpathentry kind="lib" path="dev-lib/xmlunit-1.3.jar"/>
-	<classpathentry kind="lib" path="dev-lib/robochef-0.9.6.jar"/>
-	<classpathentry kind="lib" path="runtime-lib"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=cda&amp;ivyXmlPath=cda-core%2Fivy.xml&amp;confs=*&amp;ivySettingsPath=%24%7Bworkspace_loc%3Acda%2Fcda-core%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles=%24%7Bworkspace_loc%3Acda%2Fcda-core%2Fbuild.properties%7D"/>
+	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=cda&amp;ivyXmlPath=cda-pentaho%2Fivy.xml&amp;confs=*&amp;ivySettingsPath=%24%7Bworkspace_loc%3Acda%2Fcda-pentaho%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles=%24%7Bworkspace_loc%3Acda%2Fcda-pentaho%2Fbuild.properties%7D"/>
+	<classpathentry kind="lib" path="cda-core/dev-lib/cpf-core-trunk-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="cda-core/dev-lib/robochef-0.9.6.jar"/>
+	<classpathentry kind="lib" path="cda-pentaho/dev-lib/cpf-pentaho-trunk-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
