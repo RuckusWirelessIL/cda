@@ -6,7 +6,6 @@
 	<classpathentry kind="src" path="test-resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=cda-core&amp;ivyXmlPath=ivy.xml&amp;confs=*&amp;ivySettingsPath=%24%7Bworkspace_loc%3Acda-core%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles=%24%7Bworkspace_loc%3Acda-core%2Fbuild.properties%7D"/>
-	<classpathentry kind="lib" path="dev-lib/cpf-core-trunk-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="dev-lib/robochef-0.9.6.jar"/>
 	<classpathentry kind="lib" path="test-lib/easymock-2.2.jar"/>
 	<classpathentry kind="lib" path="test-lib/ehcache-1.2.3.jar"/>

@@ -4,9 +4,10 @@
   <property name="ivy.local.default.artifact.pattern" value="[organisation]/[module]/[revision]/[type]s/[artifact]-[revision].[ext]" override="false"/>
 
   <settings defaultResolver="default"/>
-  <include url="${ivy.default.settings.dir}/ivysettings-public.xml"/>
+  <include url="${ivy.default.settings.dir}/ivysettings-public.xml" />
+  <include url="${ivy.default.settings.dir}/ivysettings-local.xml" />
   <resolvers>
- <chain name="shared">
+    <chain name="shared">
       <dual name="pentaho">
         <url name="pentaho-ivy">
           <ivy pattern="http://repo.pentaho.org/artifactory/repo/[organisation]/[module]/[revision]/[module]-[revision].ivy.xml" />
@@ -15,9 +16,10 @@
       </dual>
       <resolver ref="public" />
       <ibiblio name="java-net-maven2" root="http://download.java.net/maven/2/" m2compatible="true" />
+      <ibiblio name="sonatype" root="https://oss.sonatype.org/content/groups/public/" m2compatible="true" />
       <ibiblio name="analytical-labs" root="http://repo.analytical-labs.com/repo" m2compatible="true" />
     </chain>  
-</resolvers>
+  </resolvers>
   <include url="${ivy.default.settings.dir}/ivysettings-local.xml"/>
   <include url="${ivy.default.settings.dir}/ivysettings-main-chain.xml"/>
   <include url="${ivy.default.settings.dir}/ivysettings-default-chain.xml"/>

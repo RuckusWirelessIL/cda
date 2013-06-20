@@ -4,9 +4,6 @@
 	<classpathentry kind="src" output="bin/test/classes" path="test-src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="con" path="org.apache.ivyde.eclipse.cpcontainer.IVYDE_CONTAINER/?project=cda-pentaho&amp;ivyXmlPath=ivy.xml&amp;confs=*&amp;ivySettingsPath=%24%7Bworkspace_loc%3Acda-pentaho%2Fivysettings.xml%7D&amp;loadSettingsOnDemand=false&amp;propertyFiles=%24%7Bworkspace_loc%3Acda-pentaho%2Fbuild.properties%7D"/>
-	<classpathentry kind="lib" path="dev-lib/cda-core-TRUNK-SNAPSHOT.jar" sourcepath="/cda-core/src"/>
-	<classpathentry kind="lib" path="dev-lib/cpf-core-trunk-SNAPSHOT.jar"/>
-	<classpathentry kind="lib" path="dev-lib/cpf-pentaho-trunk-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="dev-lib/robochef-0.9.6.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/3"/>
 	<classpathentry kind="output" path="bin/classes"/>
