@@ -7,11 +7,12 @@ package pt.webdetails.cda.dataaccess;
 import org.pentaho.reporting.engine.classic.extensions.datasources.mondrian.AbstractNamedMDXDataFactory;
 
 /**
- *
+ * @deprecated a bean for every method!
  * @author joao
  */
 public interface ICubeFileProviderSetter {
     
+    //in MdxDataAccess.getDataFactory ;see also IDataAccessUtils.setMdxDataFactoryBaseConnectionProperties
     public void setCubeFileProvider(AbstractNamedMDXDataFactory factory, String catalog);
     
 }

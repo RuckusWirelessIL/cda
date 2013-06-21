@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.pentaho.reporting.engine.classic.core.util.TypedTableModel;
 
 import pt.webdetails.cda.CdaEngine;
-import pt.webdetails.cpf.repository.BaseRepositoryAccess.FileAccess;
+import pt.webdetails.cpf.repository.IRepositoryAccess.FileAccess;
 import pt.webdetails.cpf.repository.IRepositoryAccess;
 import pt.webdetails.cpf.repository.IRepositoryFile;
 import pt.webdetails.cpf.session.IUserSession;
@@ -56,7 +56,7 @@ public class SolutionRepositoryUtils
 
     logger.debug("Getting CDA list");
     IRepositoryAccess repository = CdaEngine.getEnvironment().getRepositoryAccess();
-	IRepositoryFile[] cdaTree = repository.getPluginFiles("/",FileAccess.READ);
+	IRepositoryFile[] cdaTree = repository.getPluginFiles("/", FileAccess.READ);
     @SuppressWarnings("unchecked")
 
     List<IRepositoryFile> cdaFiles = new ArrayList<IRepositoryFile>(Arrays.asList(cdaTree));

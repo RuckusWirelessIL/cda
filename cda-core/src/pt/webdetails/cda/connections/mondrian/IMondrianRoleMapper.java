@@ -4,8 +4,9 @@
 
 package pt.webdetails.cda.connections.mondrian;
 
-
+/**
+ * @deprecated yet another method bean
+ */
 public interface IMondrianRoleMapper {
-  
-  public String getRoles(String catalog);
+    public String getRoles(String catalog);
 }

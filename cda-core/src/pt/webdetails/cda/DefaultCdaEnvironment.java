@@ -1,6 +1,7 @@
 package pt.webdetails.cda;
 
 import java.io.File;
+import java.io.IOException;
 import java.io.StringReader;
 import java.net.URL;
 import java.util.ArrayList;
@@ -9,10 +10,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.pentaho.reporting.libraries.formula.FormulaContext;
 
 import pt.webdetails.cda.cache.EHCacheQueryCache;
 import pt.webdetails.cda.cache.ICacheScheduleManager;
@@ -23,7 +24,6 @@ import pt.webdetails.cda.dataaccess.DefaultDataAccessUtils;
 import pt.webdetails.cda.dataaccess.ICubeFileProviderSetter;
 import pt.webdetails.cda.dataaccess.IDataAccessUtils;
 import pt.webdetails.cda.formula.DefaultSessionFormulaContext;
-import pt.webdetails.cda.formula.ICdaCoreSessionFormulaContext;
 import pt.webdetails.cda.settings.DefaultResourceKeyGetter;
 import pt.webdetails.cda.settings.IResourceKeyGetter;
 import pt.webdetails.cpf.IPluginCall;
@@ -33,12 +33,12 @@ import pt.webdetails.cpf.impl.SimpleUserSession;
 import pt.webdetails.cpf.messaging.IEventPublisher;
 import pt.webdetails.cpf.messaging.PluginEvent;
 import pt.webdetails.cpf.plugin.CorePlugin;
-import pt.webdetails.cpf.repository.BaseRepositoryAccess.FileAccess;
+import pt.webdetails.cpf.repository.IRepositoryAccess.FileAccess;
 import pt.webdetails.cpf.repository.IRepositoryAccess;
 import pt.webdetails.cpf.repository.IRepositoryFile;
 import pt.webdetails.cpf.session.ISessionUtils;
 
-//TODO: what's the point in using interfaces for beans if we don't use them?
+//TODO: using beans where proper inheritance would work just fine
 public class DefaultCdaEnvironment implements ICdaEnvironment {
 
   protected static Log logger = LogFactory.getLog(DefaultCdaEnvironment.class);
@@ -106,50 +106,30 @@ public class DefaultCdaEnvironment implements ICdaEnvironment {
     return new EHCacheQueryCache();
   }
 
-  private String getCdaConfigFileContent(String fileName) {
-    byte[] content = getCdaConfigFile(fileName);
-    return new String(content);
-  }
-
   @Override
-  public byte[] getCdaConfigFile(String fileName) {
+  public String getCdaConfigFile(String fileName) {
     try {
-      IRepositoryAccess repo = getRepositoryAccess();
-      if (repo != null) {
-        IRepositoryFile ir = repo.getSettingsFile(fileName, FileAccess.READ);
-        if (ir != null && ir.exists()) {
-          return ir.getData();
-        }
-      }
-      URL is = this.getClass().getClassLoader().getResource(fileName);
-      if (is != null) {
-        File f = new File(is.toURI());
-        if (f.exists() && f.canRead()) return FileUtils.readFileToByteArray(f);
-      }
-    } catch (Exception e) {
+      return getRepositoryAccess().getSettingsResourceAsString(fileName);
+    } catch (IOException e) {
       logger.error(e);
+      return null;//can't throw :(
     }
-    return new byte[0];
   }
 
-  @Override
-  public ICdaCoreSessionFormulaContext getFormulaContext() {
 
-    try {
-      String id = "ICdaCoreSessionFormulaContext";
-      if (beanFactory != null && beanFactory.containsBean(id)) {
-        return (ICdaCoreSessionFormulaContext) beanFactory.getBean(id);
-      }
-    } catch (Exception e) {
-      logger.error("Cannot get bean ICdaCoreSessionFormulaContext. Using DefaultCdaCoreSessionFormulaContext", e);
-    }
+  /**
+   * TODO: may become abstract. Should override.
+   */
+  @Override
+  public FormulaContext getFormulaContext() {
+    logger.warn("Using DefaultCdaCoreSessionFormulaContext");
     return new DefaultSessionFormulaContext(null);
   }
 
   @Override
   public Properties getCdaComponents() {
     try {
-      String content = getCdaConfigFileContent("resources/components.properties");
+      String content = getCdaConfigFile("resources/components.properties");
       StringReader sr = new StringReader(content);
       Properties pr = new Properties();
       pr.load(sr);
@@ -216,30 +196,32 @@ public class DefaultCdaEnvironment implements ICdaEnvironment {
     if (beanFactory != null && beanFactory.containsBean(id)) {
       return (ISessionUtils) beanFactory.getBean(id);
     }
+    //XXX: this will not do, need to at least log an error here
+    //TODO: we can't just use bogus classes to plug every hole in the architecture
     SimpleUserSession su = new SimpleUserSession("", new String[0], false, null);
     return new SimpleSessionUtils(su, new String[0], new String[0]);
   }
 
   @Override
   public IMondrianRoleMapper getMondrianRoleMapper() {
-    String id = "IMondrianRoleMapper";
+    String id = "IMondrianRoleMapper";//XXX
     if (beanFactory != null && beanFactory.containsBean(id)) {
       return (IMondrianRoleMapper) beanFactory.getBean(id);
     }
-    logger.warn("Cannot get bean IMondrianRoleMapper. Using pseudo MondrianRoleMapper");
+    logger.error("Cannot get bean IMondrianRoleMapper. Roles will not work at all.");
 
     return new IMondrianRoleMapper() {
 
       @Override
       public String getRoles(String catalog) {
-        return "";
+        return ""; //FIXME: 
       }
     };
   }
 
   @Override
   public IRepositoryAccess getRepositoryAccess() {
-    String id = "IRepositoryAccess";
+    String id = "IRepositoryAccess";//XXX
     if (beanFactory != null && beanFactory.containsBean(id)) {
       IRepositoryAccess repAccess = (IRepositoryAccess) beanFactory.getBean(id);
       repAccess.setPlugin(CorePlugin.CDA);
@@ -252,7 +234,7 @@ public class DefaultCdaEnvironment implements ICdaEnvironment {
   @Override
   public ICubeFileProviderSetter getCubeFileProviderSetter() {
     try {
-      String id = "ICubeFileProviderSetter";
+      String id = "ICubeFileProviderSetter";//XXX
       if (beanFactory != null && beanFactory.containsBean(id)) {
         return (ICubeFileProviderSetter) beanFactory.getBean(id);
       }
@@ -266,7 +248,7 @@ public class DefaultCdaEnvironment implements ICdaEnvironment {
   @Override
   public IDataAccessUtils getDataAccessUtils() {
     try {
-      String id = "IDataAccessUtils";
+      String id = "IDataAccessUtils";//XXX
       if (beanFactory != null && beanFactory.containsBean(id)) {
         return (IDataAccessUtils) beanFactory.getBean(id);
       }
@@ -279,7 +261,7 @@ public class DefaultCdaEnvironment implements ICdaEnvironment {
   @Override
   public IResourceKeyGetter getResourceKeyGetter() {
     try {
-      String id = "IResourceKeyGetter";
+      String id = "IResourceKeyGetter";//XXX
       if (beanFactory != null && beanFactory.containsBean(id)) {
         return (IResourceKeyGetter) beanFactory.getBean(id);
       }
@@ -294,7 +276,7 @@ public class DefaultCdaEnvironment implements ICdaEnvironment {
 
   @Override
   public IPluginCall createPluginCall(String plugin, String method, Map<String, Object> params) {
-    String id = "IPluginCall";
+    String id = "IPluginCall";//XXX
     if (beanFactory != null && beanFactory.containsBean(id)) {
       IPluginCall pc = (IPluginCall) beanFactory.getBean(id);
       pc.init(new CorePlugin(plugin), method,  params);
@@ -314,7 +296,7 @@ public class DefaultCdaEnvironment implements ICdaEnvironment {
   @Override
   public ICacheScheduleManager getCacheScheduler() {
     try {
-      String id = "ICacheScheduleManager";
+      String id = "ICacheScheduleManager";//XXX
       if (beanFactory != null && beanFactory.containsBean(id)) {
         return (ICacheScheduleManager) beanFactory.getBean(id);
       }

@@ -7,6 +7,7 @@ public class CdaSessionParameterProvider implements ICdaParameterProvider {
 
 	private ISessionUtils sessionUtils;
 	
+	@Deprecated //by proxy
 	public CdaSessionParameterProvider(ISessionUtils sessionUtils) {
 		this.sessionUtils = sessionUtils;
 	}

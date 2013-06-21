@@ -5,8 +5,7 @@
 package pt.webdetails.cda.utils;
 
 /**
- *
- * @author Your Name <your.name at your.org>
+ * @deprecated
  */
 public interface ISolutionUtil {
     public String getSolutionPath(String path);

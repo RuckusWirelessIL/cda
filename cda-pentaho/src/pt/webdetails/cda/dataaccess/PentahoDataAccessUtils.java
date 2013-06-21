@@ -10,11 +10,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Properties;
 
-import org.pentaho.reporting.engine.classic.extensions.datasources.kettle.KettleTransFromFileProducer;
 import org.pentaho.reporting.engine.classic.extensions.datasources.kettle.KettleTransformationProducer;
 import org.pentaho.reporting.engine.classic.extensions.datasources.mondrian.AbstractNamedMDXDataFactory;
 import org.pentaho.reporting.engine.classic.extensions.datasources.mondrian.DataSourceProvider;
-import org.pentaho.reporting.engine.classic.extensions.datasources.mondrian.JndiDataSourceProvider;
 import org.pentaho.reporting.libraries.base.config.Configuration;
 
 import pt.webdetails.cda.connections.kettle.TransFromFileConnectionInfo;
@@ -37,9 +35,7 @@ import org.pentaho.reporting.platform.plugin.connection.PentahoMondrianDataSourc
 import org.pentaho.reporting.platform.plugin.connection.PentahoPmdConnectionProvider;
 import org.pentaho.reporting.engine.classic.core.ReportEnvironmentDataRow;
 import org.pentaho.reporting.engine.classic.core.modules.misc.datafactory.sql.ConnectionProvider;
-import org.pentaho.reporting.engine.classic.core.modules.misc.datafactory.sql.JndiConnectionProvider;
 import org.pentaho.reporting.platform.plugin.PentahoReportEnvironment;
-import org.pentaho.reporting.platform.plugin.connection.PentahoMondrianDataSourceProvider;
 
 
 public class PentahoDataAccessUtils implements IDataAccessUtils {

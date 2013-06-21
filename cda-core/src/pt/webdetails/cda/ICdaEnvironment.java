@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import org.pentaho.reporting.libraries.formula.FormulaContext;
+
 import pt.webdetails.cda.cache.ICacheScheduleManager;
 import pt.webdetails.cda.cache.IQueryCache;
 import pt.webdetails.cda.connections.mondrian.IMondrianRoleMapper;
 import pt.webdetails.cda.dataaccess.ICubeFileProviderSetter;
 import pt.webdetails.cda.dataaccess.IDataAccessUtils;
-import pt.webdetails.cda.formula.ICdaCoreSessionFormulaContext;
 import pt.webdetails.cda.settings.IResourceKeyGetter;
 import pt.webdetails.cpf.IPluginCall;
 import pt.webdetails.cpf.messaging.IEventPublisher;
@@ -17,20 +18,25 @@ import pt.webdetails.cpf.repository.IRepositoryAccess;
 import pt.webdetails.cpf.repository.IRepositoryFile;
 import pt.webdetails.cpf.session.ISessionUtils;
 
-
+/**
+ * the all-purpose factory
+ */
 public interface ICdaEnvironment {
 
   public void init() throws InitializationException;
 
+  /**
+   * @deprecated just look at it
+   */
   public ICubeFileProviderSetter getCubeFileProviderSetter();
 
   public IQueryCache getQueryCache();
 
   public IMondrianRoleMapper getMondrianRoleMapper();
 
-  public byte[] getCdaConfigFile(String fileName);
+  public String getCdaConfigFile(String fileName);
 
-  public ICdaCoreSessionFormulaContext getFormulaContext();
+  public FormulaContext getFormulaContext();
 
   public Properties getCdaComponents();
 

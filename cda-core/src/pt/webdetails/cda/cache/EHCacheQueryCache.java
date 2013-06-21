@@ -4,7 +4,6 @@
 
 package pt.webdetails.cda.cache;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
@@ -20,6 +19,7 @@ import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
 import net.sf.ehcache.Status;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -77,8 +77,8 @@ public class EHCacheQueryCache implements IQueryCache {
       boolean useTerracotta = Boolean.parseBoolean(CdaBoot.getInstance().getGlobalConfig().getConfigProperty(USE_TERRACOTTA_PROPERTY));
       String cacheConfigFile = useTerracotta ? CACHE_CFG_FILE_DIST : CACHE_CFG_FILE;
 
-      byte[] cfgFile = CdaEngine.getEnvironment().getCdaConfigFile(cacheConfigFile);
-      InputStream is = new ByteArrayInputStream(cfgFile);
+      String cfgFile = CdaEngine.getEnvironment().getCdaConfigFile(cacheConfigFile);
+      InputStream is = IOUtils.toInputStream(cfgFile);
       cacheManager = new net.sf.ehcache.CacheManager(is);
       logger.debug("Cache started using " + cacheConfigFile);
 

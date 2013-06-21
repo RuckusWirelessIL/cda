@@ -129,6 +129,7 @@ public class MdxDataAccess extends PREDataAccess
     final MondrianConnection connection = (MondrianConnection) getCdaSettings().getConnection(getConnectionId());
     final MondrianConnectionInfo mondrianConnectionInfo = connection.getConnectionInfo();
 
+    //XXX: we need two beans to create the data factory...surely there's a better way
     final AbstractNamedMDXDataFactory mdxDataFactory = createDataFactory();
     IDataAccessUtils dataAccessUtils = CdaEngine.getEnvironment().getDataAccessUtils();
     dataAccessUtils.setMdxDataFactoryBaseConnectionProperties(connection, mdxDataFactory);

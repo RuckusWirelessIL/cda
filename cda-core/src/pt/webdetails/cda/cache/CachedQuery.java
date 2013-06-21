@@ -18,7 +18,7 @@ import org.quartz.CronExpression;
 import pt.webdetails.cda.CdaEngine;
 
 import pt.webdetails.cda.utils.Util;
-import pt.webdetails.cpf.session.ISessionUtils;
+//import pt.webdetails.cpf.session.ISessionUtils;
 
 
 /**
@@ -41,8 +41,7 @@ public class CachedQuery extends Query
   {
     super(json);
 
-    ISessionUtils sessionUtils = CdaEngine.getEnvironment().getSessionUtils();
-    this.userName = sessionUtils.getCurrentSession().getUserName();
+    this.userName = CdaEngine.getEnvironment().getSessionUtils().getCurrentSession().getUserName();
     this.cronString = getJsonString(json, "cronString");
     this.lastExecuted = getJsonDate(json, "lastExecuted");
 
