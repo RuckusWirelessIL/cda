@@ -5,7 +5,9 @@
 package pt.webdetails.cda.cache;
 
 import java.io.IOException;
-import java.util.Map.Entry;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -90,6 +92,23 @@ public class HazelcastQueryCache extends ClassLoaderAwareCaller implements IQuer
       if(hzInstance == null){
         logger.fatal("No valid hazelcast instance found.");
       }
+      else {
+        logger.info("CDA CDC Hazelcast INIT");
+
+        //sync cache removals with cacheStats
+        ClassLoader cdaPluginClassLoader = Thread.currentThread().getContextClassLoader();
+        SyncRemoveStatsEntryListener syncRemoveStats = new SyncRemoveStatsEntryListener( cdaPluginClassLoader );
+        
+        IMap<TableCacheKey, TableModel> cache = hzInstance.getMap(MAP_NAME);// getCache();
+        
+        cache.removeEntryListener(syncRemoveStats);
+        cache.addEntryListener(syncRemoveStats, false);
+        
+        if(debugCache){
+          logger.debug("Added logging entry listener");
+          cache.addEntryListener(new LoggingEntryListener(cdaPluginClassLoader), false);
+        }
+      }
     }
     return hzInstance;
   }
@@ -98,7 +117,7 @@ public class HazelcastQueryCache extends ClassLoaderAwareCaller implements IQuer
   
   public HazelcastQueryCache(){
     super(Thread.currentThread().getContextClassLoader());
-    init();
+    //init();
   }
   
   private static int incrTimeouts(){
@@ -110,25 +129,25 @@ public class HazelcastQueryCache extends ClassLoaderAwareCaller implements IQuer
   }
   
     
-  private static void init()
-  {  
+//  private static void init()
+//  {  
     
-    logger.info("CDA CDC Hazelcast INIT");
-
-    //sync cache removals with cacheStats
-    ClassLoader cdaPluginClassLoader = Thread.currentThread().getContextClassLoader();
-    SyncRemoveStatsEntryListener syncRemoveStats = new SyncRemoveStatsEntryListener( cdaPluginClassLoader );
-    
-    IMap<TableCacheKey, TableModel> cache = getCache();
-    
-    cache.removeEntryListener(syncRemoveStats);
-    cache.addEntryListener(syncRemoveStats, false);
-    
-    if(debugCache){
-      logger.debug("Added logging entry listener");
-      cache.addEntryListener(new LoggingEntryListener(cdaPluginClassLoader), false);
-    }
-  }
+//    logger.info("CDA CDC Hazelcast INIT");
+//
+//    //sync cache removals with cacheStats
+//    ClassLoader cdaPluginClassLoader = Thread.currentThread().getContextClassLoader();
+//    SyncRemoveStatsEntryListener syncRemoveStats = new SyncRemoveStatsEntryListener( cdaPluginClassLoader );
+//    
+//    IMap<TableCacheKey, TableModel> cache = getCache();
+//    
+//    cache.removeEntryListener(syncRemoveStats);
+//    cache.addEntryListener(syncRemoveStats, false);
+//    
+//    if(debugCache){
+//      logger.debug("Added logging entry listener");
+//      cache.addEntryListener(new LoggingEntryListener(cdaPluginClassLoader), false);
+//    }
+//  }
   
   public void shutdownIfRunning()
   {
@@ -394,14 +413,14 @@ public class HazelcastQueryCache extends ClassLoaderAwareCaller implements IQuer
       getCache().clear();
       return size;
     }
-    
+
     try {
       return callInClassLoader(new Callable<Integer>(){
       
         public Integer call(){
           int size=0;
-          Iterable<Entry<TableCacheKey, ExtraCacheInfo>> entries = getCacheStatsEntries(cdaSettingsId, dataAccessId);
-          if(entries != null) for(Entry<TableCacheKey, ExtraCacheInfo> entry: entries){
+          Iterable<Map.Entry<TableCacheKey, ExtraCacheInfo>> entries = getCacheStatsEntries(cdaSettingsId, dataAccessId);
+          if(entries != null) for(Map.Entry<TableCacheKey, ExtraCacheInfo> entry: entries){
             getCache().remove(entry.getKey());
             size++;
           }
@@ -418,11 +437,18 @@ public class HazelcastQueryCache extends ClassLoaderAwareCaller implements IQuer
   public CacheElementInfo getElementInfo(TableCacheKey key) {
     ExtraCacheInfo info = getCacheStats().get(key);
     MapEntry<TableCacheKey,TableModel> entry = getCache().getMapEntry(key);
-    
+    final long NO_DATE = 0L;
     CacheElementInfo ceInfo = new CacheElementInfo();
+    long creationTime = entry.getCreationTime();
     ceInfo.setAccessTime(entry.getLastAccessTime());
+    if (ceInfo.getAccessTime() == NO_DATE) {
+      ceInfo.setAccessTime(creationTime);
+    }
     ceInfo.setByteSize(entry.getCost());
-    ceInfo.setInsertTime(entry.getLastUpdateTime());// getCreationTime()
+    ceInfo.setInsertTime(entry.getLastUpdateTime());
+    if (ceInfo.getInsertTime() == NO_DATE) {
+      ceInfo.setInsertTime(creationTime);
+    }
     ceInfo.setKey(key);
     ceInfo.setHits(entry.getHits());
     
@@ -432,27 +458,73 @@ public class HazelcastQueryCache extends ClassLoaderAwareCaller implements IQuer
     return ceInfo;
   }
   
-  /**
-   * (Make sure right class loader is set when accessing the iterator) 
-   * @param cdaSettingsId
-   * @param dataAccessId
-   * @return
-   */
-  public Iterable<ExtraCacheInfo> getCacheEntryInfo(String cdaSettingsId, String dataAccessId)
+//  /**
+//   * (Make sure right class loader is set when accessing the iterator) 
+//   * @param cdaSettingsId
+//   * @param dataAccessId
+//   * @return
+//   */
+//  public Iterable<ExtraCacheInfo> getCacheEntryInfo(String cdaSettingsId, String dataAccessId)
+//  { 
+//    return getCacheStats().values(new SqlPredicate("cdaSettingsId = " + cdaSettingsId + ((dataAccessId != null)? " AND dataAccessId = " + dataAccessId : "")));
+//  }
+//
+//  /**
+//   * (Make sure right class loader is set when accessing the iterator)
+//   * @param cdaSettingsId
+//   * @param dataAccessId
+//   * @return
+//   */
+//  public Iterable<Entry<TableCacheKey, ExtraCacheInfo>> getCacheStatsEntries(final String cdaSettingsId,final String dataAccessId)
+//  {
+//    return getCacheStats().entrySet(new SqlPredicate("cdaSettingsId = " + cdaSettingsId + ((dataAccessId != null)? " AND dataAccessId = " + dataAccessId : "")));
+//  }
+  public Iterable<Map.Entry<TableCacheKey, ExtraCacheInfo>> getCacheStatsEntries(final String cdaSettingsId, final String dataAccessId)
   {
-    return getCacheStats().values(new SqlPredicate("cdaSettingsId = " + cdaSettingsId + ((dataAccessId != null)? " AND dataAccessId = " + dataAccessId : "")));
+    //sql predicate would need to instantiate extraCacheInfo in host classloader
+    //return getCacheStats().entrySet(new SqlPredicate("cdaSettingsId = " + cdaSettingsId + ((dataAccessId != null)? " AND dataAccessId = " + dataAccessId : "")));
+    ArrayList<Map.Entry<TableCacheKey, ExtraCacheInfo>> result = new ArrayList<Map.Entry<TableCacheKey, ExtraCacheInfo>>();
+    for(Map.Entry<TableCacheKey, ExtraCacheInfo> entry : getCacheStats().entrySet()) {
+      if (entry.getValue().getCdaSettingsId().equals(cdaSettingsId)
+          && (dataAccessId == null || dataAccessId.equals(entry.getValue().getDataAccessId()))) 
+      {
+        result.add(entry);
+      }
+    }
+    return result;
   }
-
-  /**
-   * (Make sure right class loader is set when accessing the iterator)
-   * @param cdaSettingsId
-   * @param dataAccessId
-   * @return
-   */
-  public Iterable<Entry<TableCacheKey, ExtraCacheInfo>> getCacheStatsEntries(final String cdaSettingsId,final String dataAccessId)
-  {
-    return getCacheStats().entrySet(new SqlPredicate("cdaSettingsId = " + cdaSettingsId + ((dataAccessId != null)? " AND dataAccessId = " + dataAccessId : "")));
-  }
-  
+    
+//    return new Iterable<Entry<TableCacheKey, ExtraCacheInfo>>() {
+//      Iterator<Map.Entry<TableCacheKey, ExtraCacheInfo>> iter = getCacheStats().entrySet().iterator();
+//      @Override
+//      public Iterator<Map.Entry<TableCacheKey, ExtraCacheInfo>> iterator() {
+//        return new Iterator<Map.Entry<TableCacheKey,ExtraCacheInfo>>() {
+//          Map.Entry<TableCacheKey, ExtraCacheInfo> current = null;
+//
+//          public boolean hasNext() {
+//            while (iter.hasNext()) {
+//              current = iter.next();
+//              if (current.getValue().getCdaSettingsId().equals(cdaSettingsId)
+//                  && (dataAccessId == null || dataAccessId.equals(current.getValue().getDataAccessId())))
+//              {
+//                return true;
+//              }
+//            }
+//            current = null;
+//            return false;
+//          }
+//
+//          public Entry<TableCacheKey, ExtraCacheInfo> next() {
+//            return current;
+//          }
+//
+//          public void remove() {
+//            throw new UnsupportedOperationException();
+//          }
+//        };
+//      }
+//      
+//    };
+//  }
 
 }
