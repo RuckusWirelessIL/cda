@@ -25,6 +25,7 @@ import pt.webdetails.cpf.IPluginCall;
  * @author pedro
  * WARN: This is used from BeanShell CDA datasources. 
  * There are no references to this class from within CDA and that is expected!
+ * TODO: move to another package
  */
 public class InterPluginUtils
 {
@@ -54,21 +55,26 @@ public class InterPluginUtils
   public static TableModel getTableModelFromJsonPluginCall(String plugin, String method, Map<String, Object> params)
   {
 	  IPluginCall pluginCall = CdaEngine.getEnvironment().createPluginCall(plugin, method, params);
-	  return InterPluginUtils.getInstance().getTableModelFromJSONArray(pluginCall.call(), params);
+	  try {
+	    return InterPluginUtils.getInstance().getTableModelFromJSONArray(pluginCall.call(), params);
+	  }
+	  catch (Exception e) {
+	    logger.error(e);
+	    return null;
+	  }
   }
 
 
   public TableModel getTableModelFromJSONArray(String json, Map<String, Object> params)
   {
-
-
+    //TODO: review this
     ObjectMapper mapper = new ObjectMapper();
     try
     {
       List<Map> list = mapper.readValue(json, List.class);
 
       // Get columnNames and columnClasses
-      Map<Object, Class> cols = new LinkedHashMap<Object, Class>();
+      Map<Object, Class<?>> cols = new LinkedHashMap<Object, Class<?>>();
 
       for (Map map : list)
       {
@@ -82,11 +88,11 @@ public class InterPluginUtils
       }
 
       // Do we have columns parameter? If so, add that
-      Map<Object, Class> columnOutputs;
+      Map<Object, Class<?>> columnOutputs;
       if (params != null && params.containsKey("columns"))
       {
         String[] columns = (String[]) params.get("columns");
-        columnOutputs = new LinkedHashMap<Object, Class>();
+        columnOutputs = new LinkedHashMap<Object, Class<?>>();
         for (int i = 0; i < columns.length; i++)
         {
           String column = columns[i];
@@ -100,15 +106,11 @@ public class InterPluginUtils
             columnOutputs.put(column, String.class);
           }
         }
-
-
       }
       else
       {
         columnOutputs = cols;
       }
-
-
 
       TypedTableModel tm = new TypedTableModel(columnOutputs.keySet().toArray(new String[0]), columnOutputs.values().toArray(new Class[0]), list.size());
       logger.debug("Done. columnOutputs has " + columnOutputs.size() + " entries");
@@ -132,7 +134,6 @@ public class InterPluginUtils
 
       }
 
-
       return tm;
     }
     catch (IOException ex)
@@ -140,10 +141,7 @@ public class InterPluginUtils
       logger.error("Error parsing json: " + json, ex);
     }
 
-
     return null;
-
-
   }
 
 

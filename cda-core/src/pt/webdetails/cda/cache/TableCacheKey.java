@@ -26,7 +26,7 @@ import pt.webdetails.cda.dataaccess.Parameter;
 public class TableCacheKey implements Serializable
   {
 
-    private static final long serialVersionUID = 5L; //5: hazelcast version
+    private static final long serialVersionUID = 6L; //6: post-refactor
     
     private int connectionHash;
     private String query;

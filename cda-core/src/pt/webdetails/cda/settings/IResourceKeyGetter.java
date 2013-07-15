@@ -9,7 +9,7 @@ import org.pentaho.reporting.libraries.resourceloader.ResourceKeyCreationExcepti
 import org.pentaho.reporting.libraries.resourceloader.ResourceManager;
 
 /**
- *
+ * @deprecated a tad too specific
  * @author pedrovale
  */
 public interface IResourceKeyGetter {
