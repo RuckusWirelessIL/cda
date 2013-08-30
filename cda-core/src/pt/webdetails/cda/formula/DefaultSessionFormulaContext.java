@@ -96,11 +96,4 @@ public class DefaultSessionFormulaContext implements
       }
       return df.resolveReference(name);
     }
-
-
-	@Override
-	public void setSession(IUserSession session) {
-		// not sure if we need it?
-	}
-
 }
