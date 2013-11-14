@@ -188,6 +188,10 @@ public class JoinCompoundDataAccess extends CompoundDataAccess implements RowPro
       trans.executeCheckedSuccess(null, null, this);
       logger.info(trans.getReadWriteThroughput());
       output = outputListener.getRowsWritten();
+      
+      if (output == null) {
+    	  return new MetadataTableModel(new String[0], new Class[0], 0);
+      }
     }
     catch (UnknownDataAccessException e)
     {
@@ -197,7 +201,6 @@ public class JoinCompoundDataAccess extends CompoundDataAccess implements RowPro
     {
       throw new QueryException("Exception during query ", e);
     }
-
     return output;
   }
 
