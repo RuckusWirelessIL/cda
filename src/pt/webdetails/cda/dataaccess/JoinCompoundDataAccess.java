@@ -143,7 +143,7 @@ public class JoinCompoundDataAccess extends CompoundDataAccess implements RowPro
 			  mergeJoinXML.append("FULL OUTER");
 			  break;
 	  }
-	  mergeJoinXML.append("</join_type><step1>sortLeft</step1><step2>sortRight</step2>");
+	  mergeJoinXML.append("</join_type><copies>1</copies><step1>sortLeft</step1><step2>sortRight</step2>");
 	  mergeJoinXML.append("<keys_1>");
 
       for (int i = 0; i < leftKeys.length; i++)
