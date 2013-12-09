@@ -56,4 +56,7 @@ public class CompactBandedMDXDataFactory extends AbstractNamedMDXDataFactory
     final Result cellSet = performQuery(queryName, parameters);
     return new CompactBandedMDXTableModel(cellSet, extractQueryLimit(parameters));
   }
+
+
+
 }
